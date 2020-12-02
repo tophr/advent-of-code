@@ -33,3 +33,46 @@ nums.forEach( (num) => {
 var finalResult = results[0] * results[1];
 
 console.log(finalResult);
+
+// PART DEUX
+function threeSum(nums, target_num) {
+  nums.sort((a, b) => a - b);
+  const result = [];
+  for (let indexA = 0; indexA < nums.length - 2; indexA++) {
+    const a = nums[indexA];
+
+    if (a > target_num) return result;
+    if (a === nums[indexA - 1]) continue;
+
+    let indexB = indexA + 1;
+    let indexC = nums.length - 1;
+
+    while(indexB < indexC) {
+      const b = nums[indexB];
+      const c = nums[indexC];
+
+      if ((a + b + c) === target_num) {
+        result.push([a, b, c]);
+      }
+
+      if ((a + b + c) >= target_num) {
+        while (nums[indexC - 1] === c) { indexC--; }
+        indexC--;
+      }
+
+      if((a + b + c) <= target_num) {
+        while(nums[indexB + 1] === b) { indexB++; }
+        indexB++;
+      }
+    }
+  }
+  return result;
+}
+
+console.log('part 2');
+var part2 = threeSum(text, 2020);
+console.log( part2[0] );
+
+// hacky much x3
+var finalResult2 = part2[0][0] * part2[0][1] * part2[0][2];
+console.log(finalResult2);
