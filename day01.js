@@ -6,23 +6,30 @@ function twoSum(nums, target_num) {
   var map = [];
   var indexnum = [];
 
-  for (var x = 0; x < nums.length; x++)
-  {
-    if (map[nums[x]] != null)
-    {
+  for (var x = 0; x < nums.length; x++) {
+    if (map[nums[x]] != null) {
       var index = map[nums[x]];
       indexnum[0] = index;
       indexnum[1] = x;
       break;
     }
-    else
-    {
+    else {
       map[target_num - nums[x]] = x;
     }
   }
   return indexnum;
 }
-console.log(twoSum(text,2020));
 
+var nums = twoSum(text,2020);
 
-// console.log({text});
+console.log( nums );
+
+var results = [];
+nums.forEach( (num) => {
+  results.push(text[num]);
+});
+
+// hacky much
+var finalResult = results[0] * results[1];
+
+console.log(finalResult);
