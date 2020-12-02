@@ -1029,3 +1029,37 @@ passwordMulti.forEach( ( passArray ) => {
 });
 
 console.log(validPasswordTotal);
+
+// Part Deux!
+function evalPasswordDeux( passwordArray ) {
+  var range = passwordArray[0].split("-");
+  var char = passwordArray[1].charAt(0);
+  var password = passwordArray[2];
+
+  var pattern = "[^" + char + "]";
+  var re = new RegExp(pattern, "g");
+  var charOccur = password.replace(re, "").length;
+
+  var passCount = 0;
+
+  if ( password.charAt( range[0] - 1 ) == char ) {
+    passCount++;
+  }
+  if ( password.charAt( range[1] - 1 ) == char ) {
+    passCount++;
+  }
+
+  if ( passCount == 1 ) {
+    return true;
+  }
+}
+
+var validPasswordDeuxTotal = 0;
+
+passwordMulti.forEach( ( passArray ) => {
+  if ( evalPasswordDeux( passArray ) ) {
+    validPasswordDeuxTotal++;
+  }
+});
+
+console.log(validPasswordDeuxTotal);
