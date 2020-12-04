@@ -333,35 +333,24 @@ var trees = `.#..........#...#...#..#.......
 ..#....#....#......#..##..#...#
 #.........#..#..#...........#..`;
 
+// var treeArray = sampleTrees.split("\n");
 var treeArray = trees.split("\n");
 // console.log(treeArray);
 var i = 0;
 var treeCounter = 0;
+var rowLength = treeArray[0].length;
+
 treeArray.forEach( (row) => {
-  // console.log(row.charAt( ( i * 3 ) % 11 ) );
-  // console.log( 11 % ( i * 3 ) );
 
-  var pointer = ( ( i * 3 ) + 1 ) % 11;
+  var pointer = ( ( i * 3 ) + 1 ) % rowLength;
+  // console.log(pointer);
 
-  if (pointer === 0 ) {
-    if ( row.charAt( 10 ) === '#' ) {
-      // console.log(i + ' tree!!!');
-      treeCounter++;
-    }
-  } else {
-    if ( row.charAt( pointer - 1 ) === '#' ) {
-      // console.log(i + 'tree!!!');
-      console.log(pointer - 1);
-      treeCounter++;
-    }
-  }
+  var pointerIndex = pointer === 0 ? rowLength - 1 : pointer -1;
+  // console.log({pointerIndex});
 
- // if ( row.charAt( ( ( ( i * 3 ) + 1 ) % 11 ) - 1 ) === '#' ) {
- //   // console.log('tree!!!');
- // }
+ if ( row.charAt( pointerIndex ) === '#' ) {
+   console.log('tree!!!');
+ };
+
  i++;
- // console.log(i);
-
 });
-
-console.log(treeCounter);
