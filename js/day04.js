@@ -1,4 +1,4 @@
-var passportsEx = `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+const passportsEx = `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
 iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
@@ -12,7 +12,7 @@ hgt:179cm
 hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in`;
 
-var passports = `ecl:hzl byr:1926 iyr:2010
+const passports = `ecl:hzl byr:1926 iyr:2010
 pid:221225902 cid:61 hgt:186cm eyr:2021 hcl:#7d3b0c
 
 hcl:#efcc98 hgt:178 pid:433543520
@@ -1149,26 +1149,52 @@ byr:2000
 ecl:hzl eyr:2029
 iyr:2011 hcl:#866857 hgt:74in`;
 
-var passportArray = passports.split("\n\n");
+const invalidPassports = `eyr:1972 cid:100
+hcl:#18171d ecl:amb hgt:170 pid:186cm iyr:2018 byr:1926
+
+iyr:2019
+hcl:#602927 eyr:1967 hgt:170cm
+ecl:grn pid:012533040 byr:1946
+
+hcl:dab227 iyr:2012
+ecl:brn hgt:182cm pid:021572410 eyr:2020 byr:1992 cid:277
+
+hgt:59cm ecl:zzz
+eyr:2038 hcl:74454a iyr:2023
+pid:3556412378 byr:2007`;
+const validPassports = `pid:087499704 hgt:74in ecl:grn iyr:2012 eyr:2030 byr:1980
+hcl:#623a2f
+
+eyr:2029 ecl:blu cid:129 byr:1989
+iyr:2014 pid:896056539 hcl:#a97842 hgt:165cm
+
+hcl:#888785
+hgt:164cm byr:2001 iyr:2015 cid:88
+pid:545766238 ecl:hzl
+eyr:2022
+
+iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719`;
+
+const passportArray = passports.split("\n\n");
 // console.log(passportArray);
 
 passportArray.forEach((passport, i) => {
-  var separators = [' ', '\n'];
-  var credentials = passport.split(new RegExp(separators.join('|'), 'g')).map(s => s.split(':'));
+  const separators = [' ', '\n'];
+  const credentials = passport.split(new RegExp(separators.join('|'), 'g')).map(s => s.split(':'));
 
   const result = {};
   credentials.forEach(([key,value]) => result[key] = value);
 
   passportArray[i] = result;
 });
-// console.log(passportArray);
+console.log(passportArray);
 
-var credentialReqs = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'];
+const credentialReqs = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'];
 //'cid'
 
-var valid = 0;
+let valid = 0;
 passportArray.forEach((passport, i) => {
-  var size = Object.keys(passport).length;
+  const size = Object.keys(passport).length;
   // console.log(size);
   // console.log(i);
   if ( size === 8 ) {
@@ -1185,5 +1211,119 @@ passportArray.forEach((passport, i) => {
     // console.log('not valid');
   }
 });
+console.log('answers for part 1 is ' + valid);
 
-console.log(valid);
+// Part Deux!
+const validByr = [1920,2002];
+const validIyr = [2010,2020];
+const validEyr = [2020,2030];
+const validHgtCm = [150,193];
+const validHgtIn = [59,76];
+const validEcl = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'];
+
+function getNumLength(number) {
+  return number.toString().length;
+}
+
+function inRange(input, range, digits) {
+  // console.log( getNumLength(input) );
+  if ( getNumLength(input) === digits && input >= range[0] && input <= range[1] ) {
+    return true;
+  }
+}
+
+// console.log( inRange('foo', validByr, 4) );
+
+function credentialValidator(input) {
+  // console.log(input);
+  if ( input.byr ) {
+    if ( inRange( input.byr, validByr, 4 ) ) {
+      // console.log(input.byr + ' is valid');
+      // console.log('byr is valid');
+    } else {
+      return;
+    }
+  }
+  if ( input.iyr ) {
+    // console.log('iyr');
+    if ( inRange( input.iyr, validIyr, 4 ) ) {
+      // console.log(input.byr + ' is valid');
+      // console.log('iyr is valid');
+    } else {
+      return;
+    }
+  }
+  if ( input.eyr ) {
+    if ( inRange( input.eyr, validEyr, 4 ) ) {
+      // console.log(input.byr + ' is valid');
+      // console.log('eyr is valid');
+    } else {
+      // console.log(input.byr + ' is invalid');
+      return;
+    }
+    // console.log('eyr');
+  }
+  if ( input.hgt ) {
+    // const separators = ['i', 'c'];
+    // const heights = input.hgt.split(new RegExp(separators.join('|'), 'g'));
+    var heights = input.hgt.match(/[a-z]+|[^a-z]+/gi);
+    // console.log(heights);
+    if ( heights[1] == 'in' ) {
+      // return inRangeBasic( heights[0], validHgtIn ) ? false : true;
+      if ( !inRange( heights[0], validHgtIn, 2 ) ) {
+        return;
+      }
+    } else if ( heights[1] == 'cm' ) {
+      if ( !inRange( heights[0], validHgtCm, 3 ) ) {
+        return;
+      }
+      // return inRangeBasic( heights[0], validHgtCm ) ? false : true;
+    } else {
+      return;
+    }
+  }
+  if ( input.ecl ) {
+    // console.log(input.ecl);
+    if ( !validEcl.includes(input.ecl) ) {
+      // console.log(input.ecl);
+      return;
+    }
+  }
+  if ( input.hcl ) {
+    if ( !/^#[0-9A-F]{6}$/i.test( input.hcl ) ) {
+      // console.log(input.hcl);
+      return;
+    }
+  }
+  if ( input.pid ) {
+    if ( getNumLength(input.pid) !== 9 ) {
+      // console.log(input.pid);
+      return;
+    }
+  }
+  return true;
+}
+
+let valid2 = 0;
+passportArray.forEach((passport, i) => {
+  const size = Object.keys(passport).length;
+  if ( size === 8 ) {
+    if ( credentialValidator(passport) ) {
+      valid2++;
+      // console.log(i + ' all req creds prez');
+    }
+  } else if ( size === 7) {
+    if ( Object.keys(passport).includes('cid') ) {
+      // console.log('CID! not valid');
+    } else {
+      if ( credentialValidator(passport) ) {
+        valid2++;
+        // console.log(i + ' all req creds prez');
+      }
+    }
+  } else {
+    // console.log('not valid');
+  }
+});
+
+console.log('answer for part 2 is ' + valid2);
