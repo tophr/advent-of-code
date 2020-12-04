@@ -1232,8 +1232,6 @@ function inRange(input, range, digits) {
   }
 }
 
-// console.log( inRange('foo', validByr, 4) );
-
 function credentialValidator(input) {
   // console.log(input);
   if ( input.byr ) {
@@ -1266,7 +1264,7 @@ function credentialValidator(input) {
   if ( input.hgt ) {
     // const separators = ['i', 'c'];
     // const heights = input.hgt.split(new RegExp(separators.join('|'), 'g'));
-    var heights = input.hgt.match(/[a-z]+|[^a-z]+/gi);
+    const heights = input.hgt.match(/[a-z]+|[^a-z]+/gi);
     // console.log(heights);
     if ( heights[1] == 'in' ) {
       // return inRangeBasic( heights[0], validHgtIn ) ? false : true;
