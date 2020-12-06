@@ -2058,17 +2058,45 @@ skh
 sk`;
 
 const customsArray = customs.split("\n\n");
-
 let answerCounts = [];
 
 customsArray.forEach((answer, i) => {
-  // customsArray[i] = answer.split("\n");
   answer = answer.replace(/(\r\n|\n|\r)/gm, "");
   let answers = answer.split('');
-  // console.log(answers);
   let uniqueChars = [...new Set(answers)];
-  // console.log(uniqueChars.length);
   answerCounts.push(uniqueChars.length);
 });
 
 console.log('answer for part 1 is ' + answerCounts.reduce((a, b) => a + b, 0));
+
+answerCounts = [];
+
+//https://stackoverflow.com/questions/1885557/simplest-code-for-array-intersection-in-javascript
+// Calculate intersection of multiple array or object values.
+function intersect (arrList) {
+    var arrLength = Object.keys(arrList).length;
+        // (Also accepts regular objects as input)
+    var index = {};
+    for (var i in arrList) {
+        for (var j in arrList[i]) {
+            var v = arrList[i][j];
+            if (index[v] === undefined) index[v] = {};
+            index[v][i] = true; // Mark as present in i input.
+        };
+    };
+    var retv = [];
+    for (var i in index) {
+        if (Object.keys(index[i]).length == arrLength) retv.push(i);
+    };
+    return retv;
+};
+
+customsArray.forEach((answer, i) => {
+  let answerArray = answer.split("\n");
+  answerArray.forEach((answerInd, i) => {
+    answerArray[i] = answerInd.split('');
+  });
+  const uniqueAnswers = intersect(answerArray);
+  answerCounts.push(uniqueAnswers.length);
+});
+console.log('answer for part 2 is ' + answerCounts.reduce((a, b) => a + b, 0));
