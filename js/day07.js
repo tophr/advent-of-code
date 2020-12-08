@@ -654,30 +654,54 @@ console.log( 'answer for part 1 is ' + bagTypeCount.slice(-1)[0] );
 
 // Part Deux!
 
-function bagCount( bags ) {
+function bagSum(color, bags) {
+  let bagCounter = 0;
+  bags.forEach((bag, i) => {
+    // bagCount( color, luggageArray ); // really? yike
+    // bagCounter += bag[0] * bagSum( bag, bags );
+      bagCounter += bag[0] * 1;
+    bagCounter++;
+  });
+  return bagCounter;
+}
+
+function bagCount( color, bags ) {
   let bagCounter = 0;
   let innerBags = 0;
 
-  if ( bags[0] === bagColor ) {
-    return ''; // sum up the bags
-  } else {
-    let sum = 0;
-    for (let subdep of Object.values(department)) {
-      sum += bagCount(bags); // recursion
-    }
-    return sum;
-  }
+  // search the whole array for matching bag at top level
+  bags.forEach((bag, i) => {
+    // console.log(bag);
+    if ( bag[0] === color ) {
+      // bagCounter++; // add the bag itself
+      // need to take child bags, multiply qty, and search for contained bags recursively
+      bagCounter += bagSum( color, bag[1] );
+    };
+  });
 
-
-    if ( bagContents[0] === bagColor ) {
-      bagContents[1].forEach((bag, i2) => {
-        console.log(bag[0]);
-        innerBags += parseInt(bag[0]);
-      });
-
-    }
+  // if ( bags[0] === bagColor ) {
+  //   return ''; // sum up the bags
+  // } else {
+  //   let sum = 0;
+  //   for (let subdep of Object.values(department)) {
+  //     sum += bagCount(bags); // recursion
+  //   }
+  //   return sum;
+  // }
+  //
+  //
+  //   if ( bagContents[0] === bagColor ) {
+  //     bagContents[1].forEach((bag, i2) => {
+  //       console.log(bag[0]);
+  //       innerBags += parseInt(bag[0]);
+  //     });
+  //
+  //   }
+  return bagCounter;
 }
 
-luggageArray.forEach((bagContents, i) => {
-  // console.log( bagCount( 'shiny gold', luggageArray) );
-}
+console.log( bagCount( 'shiny gold', luggageArray) );
+
+// luggageArray.forEach((bagContents, i) => {
+//   // console.log( bagCount( 'shiny gold', luggageArray) );
+// });
