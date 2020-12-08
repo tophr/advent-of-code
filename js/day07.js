@@ -603,7 +603,7 @@ plaid bronze bags contain 3 drab gold bags, 4 dotted black bags.
 shiny black bags contain 3 bright magenta bags, 2 dark indigo bags, 1 posh plum bag, 5 drab gold bags.
 pale magenta bags contain 1 clear gold bag, 5 posh fuchsia bags, 2 faded cyan bags.`;
 
-const luggageArray = luggage.split("\n");
+const luggageArray = luggageEx.split("\n");
 
 luggageArray.forEach((rule, i) => {
   const pieces = rule.split(' bags contain ');
@@ -640,12 +640,44 @@ function bagLookup( bagColor, bagList ) {
 bagLookup('shiny gold', luggageArray);
 
 let bagTypeCount = [];
+let i = 0;
 do {
   bagHolders.forEach((bag, i) => {
     bagLookup(bag, luggageArray)
   });
   bagTypeCount.push( [...new Set(bagHolders)].length );
+  i++;
 }
-while ( bagTypeCount.slice(-1)[0] !== bagTypeCount.slice(-2, -1)[0] );
+while ( bagTypeCount[i - 1] !== bagTypeCount[i - 2] );
 
 console.log( 'answer for part 1 is ' + bagTypeCount.slice(-1)[0] );
+
+// Part Deux!
+
+function bagCount( bags ) {
+  let bagCounter = 0;
+  let innerBags = 0;
+
+  if ( bags[0] === bagColor ) {
+    return ''; // sum up the bags
+  } else {
+    let sum = 0;
+    for (let subdep of Object.values(department)) {
+      sum += bagCount(bags); // recursion
+    }
+    return sum;
+  }
+
+
+    if ( bagContents[0] === bagColor ) {
+      bagContents[1].forEach((bag, i2) => {
+        console.log(bag[0]);
+        innerBags += parseInt(bag[0]);
+      });
+
+    }
+}
+
+luggageArray.forEach((bagContents, i) => {
+  // console.log( bagCount( 'shiny gold', luggageArray) );
+}
