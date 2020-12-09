@@ -650,7 +650,7 @@ acc +26
 acc +15
 jmp +1`;
 
-const bootcodeArray = bootcode.split("\n");
+const bootcodeArray = bootcodeEx.split("\n");
 bootcodeArray.forEach((line, i) => {
   bootcodeArray[i] = line.split(' ');
 });
@@ -661,10 +661,7 @@ let visited = [];
 let i = 0;
 
 function decoder(bootcode) {
-  // bootcodeArray.forEach((line, i) => {\
-
   do {
-
     if ( bootcode[i][0] === 'acc' ) {
       accumulator = parseInt(accumulator) + parseInt(bootcode[i][1]);
       // console.log({accumulator});
@@ -680,13 +677,37 @@ function decoder(bootcode) {
       // console.log(i + ' nop');
       i++;
     }
-
   }
   while ( false === visited.includes(i) );
-
-  // });
 };
-
 decoder(bootcodeArray);
+console.log('answer for part 1 is ' + accumulator);
 
-console.log({accumulator});
+accumulator = 0;
+visited = [];
+i = 0;
+
+// if it loops5 5ever, need to go back through and test flipping every jmp nop
+
+function decoderDeux(bootcode) {
+  do {
+    if ( bootcode[i][0] === 'acc' ) {
+      accumulator = parseInt(accumulator) + parseInt(bootcode[i][1]);
+      // console.log({accumulator});
+      visited.push(i);
+      i++;
+    }
+    if ( bootcode[i][0] === 'jmp' ) {
+      visited.push(i);
+      i = i + parseInt(bootcode[i][1]);
+    }
+    if ( bootcode[i][0] === 'nop' ) {
+      visited.push(i);
+      // console.log(i + ' nop');
+      i++;
+    }
+  }
+  while ( false === visited.includes(i) && i < bootcode.length );
+};
+// decoderDeux(bootcodeArray);
+// console.log({accumulator});

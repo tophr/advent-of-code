@@ -656,12 +656,14 @@ console.log( 'answer for part 1 is ' + bagTypeCount.slice(-1)[0] );
 
 function bagSum(color, bags) {
   let bagCounter = 0;
+  // console.log({bags});
   bags.forEach((bag, i) => {
     // bagCount( color, luggageArray ); // really? yike
     // bagCounter += bag[0] * bagSum( bag, bags );
-      bagCounter += bag[0] * 1;
-    bagCounter++;
+    bagCounter += parseInt(bag[0]);
+    // bagCounter++;
   });
+  // console.log({bagCounter});
   return bagCounter;
 }
 
@@ -675,6 +677,7 @@ function bagCount( color, bags ) {
     if ( bag[0] === color ) {
       // bagCounter++; // add the bag itself
       // need to take child bags, multiply qty, and search for contained bags recursively
+      console.log({bag});
       bagCounter += bagSum( color, bag[1] );
     };
   });
