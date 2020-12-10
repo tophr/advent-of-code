@@ -1020,7 +1020,7 @@ const data = `16
 70522388517265
 74936365475876`;
 
-const dataArray = dataEx.split("\n");
+const dataArray = data.split("\n").map(Number);
 console.log(dataArray);
 
 function validator( numbers, preambleLength ) {
@@ -1029,8 +1029,8 @@ function validator( numbers, preambleLength ) {
   parseData.forEach( (num, i) => {
     let preamble = numbers.slice(i, preambleLength + i);
     preamble.forEach( (numb, i2) => {
-      let val = parseInt(num) - parseInt(numb);
-      if ( preamble.includes( val.toString() ) ) {
+      let val = num - numb;
+      if ( preamble.includes( val ) ) {
         validNums.push(num);
       }
     });
@@ -1038,5 +1038,27 @@ function validator( numbers, preambleLength ) {
   let invalidNums = parseData.filter(val => !validNums.includes(val));
   return invalidNums[0];
 }
+let part1 = validator( dataArray, 25);
+console.log('the answer for part 1 is ' + part1);
 
-console.log('the answer for part 1 is ' + validator( dataArray, 5));
+function weaknessLookup( invalidNum, numbers ) {
+  let numberRange = [];
+  let n = 1;
+  // could optimize by stopping n - length of array
+  while ( n < numbers.length ) {
+    numbers.forEach( (num, i) => {
+      let numbRange = numbers.slice(i, n + i + 1); // is this the right way to do this?
+      let numSum = numbRange.reduce((a, b) => a + b, 0);
+      // console.log({numSum});
+      if ( numSum == invalidNum ) {
+        numberRange = numbRange;
+      }
+    });
+    n++;
+  }
+  return numberRange;
+}
+
+let part2range = weaknessLookup( part1, dataArray );
+let part2solution = Math.min(...part2range) + Math.max(...part2range);
+console.log('the answer for aprt 2 is ' + part2solution );
