@@ -833,3 +833,56 @@ function navigation( instructions ) {
 }
 
 console.log( 'answer for part 1 is ' + navigation(instructionsArray) );
+
+function waypointNavigation( instructions ) {
+  let x = 0; //EW
+  let y = 0; //NS
+  let waypointX = 10;
+  let waypointY = 1;
+  let heading = 90;
+  instructions.forEach((instruction, i) => {
+    if ( instruction[0] == 'N' ) {
+      waypointY += parseInt( instruction[1]);
+    } else if ( instruction[0] == 'E' ) {
+      waypointX += parseInt(instruction[1]);
+    } else if ( instruction[0] == 'S' ) {
+      waypointY += -parseInt(instruction[1]);
+    } else if ( instruction[0] == 'W' ) {
+      waypointX += -parseInt(instruction[1]);
+    } else if ( instruction[0] == 'F' ) {
+      x += waypointX * instruction[1];
+      y += waypointY * instruction[1];
+    } else if ( instruction[0] == 'L' ) {
+      let oldWaypointX = waypointX;
+      let oldWaypointY = waypointY;
+      if ( instruction[1] == 90 ) {
+        waypointX = oldWaypointY * -1;
+        waypointY = oldWaypointX;
+      } else if ( instruction[1] == 180 ) {
+        waypointX = oldWaypointX * -1;
+        waypointY = oldWaypointY * -1;
+      } else if ( instruction[1] == 270 ) {
+        waypointX = oldWaypointY;
+        waypointY = oldWaypointX * -1;
+      }
+    } else if ( instruction[0] == 'R' ) {
+      let oldWaypointX = waypointX;
+      let oldWaypointY = waypointY;
+      if ( instruction[1] == 90 ) {
+        waypointX = oldWaypointY;
+        waypointY = oldWaypointX * -1;
+      } else if ( instruction[1] == 180 ) {
+        waypointX = oldWaypointX * -1;
+        waypointY = oldWaypointY * -1;
+      } else if ( instruction[1] == 270 ) {
+        waypointX = oldWaypointY * -1;
+        waypointY = oldWaypointX;
+      }
+    }
+    // console.log('waypoint is ' + waypointX + ' ' + waypointY);
+    // console.log('we are at ' + x + ' ' + y);
+  });
+  return Math.abs(x) + Math.abs(y);
+}
+
+console.log( 'answer for part 2 is ' + waypointNavigation(instructionsArray) );
