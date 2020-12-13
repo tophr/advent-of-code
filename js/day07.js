@@ -8,6 +8,14 @@ vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
 faded blue bags contain no other bags.
 dotted black bags contain no other bags.`;
 
+const luggageEx2 = `shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.`;
+
 const luggage = `pale cyan bags contain 2 posh black bags, 4 wavy gold bags, 2 vibrant brown bags.
 dull lavender bags contain 3 pale tomato bags.
 light red bags contain 3 wavy teal bags, 3 plaid aqua bags, 4 drab lavender bags, 2 bright coral bags.
@@ -603,7 +611,8 @@ plaid bronze bags contain 3 drab gold bags, 4 dotted black bags.
 shiny black bags contain 3 bright magenta bags, 2 dark indigo bags, 1 posh plum bag, 5 drab gold bags.
 pale magenta bags contain 1 clear gold bag, 5 posh fuchsia bags, 2 faded cyan bags.`;
 
-const luggageArray = luggageEx.split("\n");
+const luggageArray = luggage.split("\n");
+console.log({luggageArray});
 
 luggageArray.forEach((rule, i) => {
   const pieces = rule.split(' bags contain ');
@@ -653,58 +662,32 @@ while ( bagTypeCount[i - 1] !== bagTypeCount[i - 2] );
 console.log( 'answer for part 1 is ' + bagTypeCount.slice(-1)[0] );
 
 // Part Deux!
-
-function bagSum(color, bags) {
-  let bagCounter = 0;
-  // console.log({bags});
-  bags.forEach((bag, i) => {
-    // bagCount( color, luggageArray ); // really? yike
-    // bagCounter += bag[0] * bagSum( bag, bags );
-    bagCounter += parseInt(bag[0]);
-    // bagCounter++;
-  });
-  // console.log({bagCounter});
-  return bagCounter;
+function getIndexOfK(arr, k) {
+  for (var i = 0; i < arr.length; i++) {
+    var index = arr[i].indexOf(k);
+    if (index > -1) {
+      return [i, index];
+    }
+  }
 }
 
+// Adapted from the much cleaner object based code here:
+// https://github.com/Topener/adventofcode2020/blob/master/day7/program.js
 function bagCount( color, bags ) {
   let bagCounter = 0;
-  let innerBags = 0;
-
-  // search the whole array for matching bag at top level
-  bags.forEach((bag, i) => {
-    // console.log(bag);
-    if ( bag[0] === color ) {
-      // bagCounter++; // add the bag itself
-      // need to take child bags, multiply qty, and search for contained bags recursively
-      console.log({bag});
-      bagCounter += bagSum( color, bag[1] );
-    };
-  });
-
-  // if ( bags[0] === bagColor ) {
-  //   return ''; // sum up the bags
-  // } else {
-  //   let sum = 0;
-  //   for (let subdep of Object.values(department)) {
-  //     sum += bagCount(bags); // recursion
-  //   }
-  //   return sum;
-  // }
-  //
-  //
-  //   if ( bagContents[0] === bagColor ) {
-  //     bagContents[1].forEach((bag, i2) => {
-  //       console.log(bag[0]);
-  //       innerBags += parseInt(bag[0]);
-  //     });
-  //
-  //   }
+  let colorIndex = getIndexOfK(bags, color);
+  if ( colorIndex !== undefined ) {
+    for (innerColorIndex in bags[colorIndex[0]][1]) {
+      let innerColor = bags[colorIndex[0]][1][innerColorIndex][1]; //smdh
+      let innerColorCount = bags[colorIndex[0]][1][innerColorIndex][0];
+      bagCounter += parseInt(innerColorCount);
+      let subCount = bagCount(innerColor, bags);
+      if (subCount > 0) {
+        subCount = subCount * parseInt(innerColorCount);
+        bagCounter += subCount;
+      }
+    }
+  }
   return bagCounter;
 }
-
-console.log( bagCount( 'shiny gold', luggageArray) );
-
-// luggageArray.forEach((bagContents, i) => {
-//   // console.log( bagCount( 'shiny gold', luggageArray) );
-// });
+console.log( bagCount('shiny gold', luggageArray) );
