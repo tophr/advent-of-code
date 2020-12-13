@@ -100,7 +100,7 @@ LLLL..L.LLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLLLL.LLLL.LLLLL.LLLLLLLLLLL.LL
 LLLLL..LLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLL.LLLLLLLLL.LLLLLL..LLLLLLLLL.LLLLLLLL
 LLLLL.LLLLLL.LLLLLLLLL.LLLLLL.LLLL.LLLLLLLLLLLLLLLLLLL.L.LL..LLLLLLLLLLL.LLLL.LLLLLLLLL.LLLLLLLL`;
 
-const seatLayoutArray = seatLayout.split("\n");
+const seatLayoutArray = seatLayoutEx.split("\n");
 
 seatLayoutArray.forEach((row, i) => {
   seatLayoutArray[i] = row.split("");
@@ -195,4 +195,149 @@ function layoutIterator( layout ) {
   }
 }
 // console.log( layoutIterator(seatLayoutArray));
-layoutIterator(seatLayoutArray);
+// layoutIterator(seatLayoutArray);
+
+// Part Deux!
+function seatFillDeux( seats ) {
+  let seatPlan = seats.map(function(arr) {
+    return arr.slice();
+  });
+  seats.forEach((row, i) => {
+    row.forEach((seat, j) => {
+      if ( seat === '.' ) {
+        return;
+      } else {
+        let adjFilledSeats = 0;
+        let adjSeats = [];
+
+        // Top row
+        if ( i > 0) {
+          let l = 1;
+          let r1 = 0;
+          let r2 = 0;
+          let r3 = 0;
+          do {
+            console.log('Pos is ' + i + ' ' + j + l);
+            if ( seats[i - l][j - l] === '#' && r1 === 0) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r1++;
+            }
+            // console.log(l);
+            if ( seats[i - l][j] === '#' && r2 === 0) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r2++;
+            }
+            if ( seats[i - l][j + l] === '#' && r3 === 0) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r3++;
+            }
+            l++;
+          }
+
+          while ( l < seats.length );
+          // l++;
+        }
+
+        // Middle row
+        if ( j > 0 && j < row.length ) {
+          let l = 1;
+          let r = 1;
+          let r4 = 0;
+          let r6 = 0;
+          do {
+            if ( seats[i][j - l] === '#' && r4 === 0 ) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r4++;
+            }
+            l++;
+          }
+          while ( l < row.length );
+
+          do {
+            if ( seats[i][j + r] === '#' && r6 === 0) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r6++;
+            }
+            r++;
+          }
+          while ( r < row.length );
+        }
+
+        // Bottom row
+        if ( i < seats.length - 1 ) {
+          let l = 1;
+          do {
+            // console.log('Pos is ' + i + ' ' + j + ' ' + l);
+            // console.log(seats.length);
+            let r7 = 0;
+            let r8 = 0;
+            let r9 = 0;
+            if ( seats[i + l][j - l] === '#' && r7 === 0 ) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r7++;
+            }
+            if ( seats[i + l][j] === '#' && r8 === 0 ) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r8++;
+            }
+            if ( ( seats[i + l][j + l] === '#' ) && r9 === 0 ) {
+              // console.log('Pos is ' + i + ' ' + j);
+              adjFilledSeats++;
+              r9++;
+            }
+            l++;
+          }
+          while ( l < seats.length );
+        }
+
+        // adjSeats.forEach((item, k) => {
+        //   if ( item === '#') {
+        //     adjFilledSeats++;
+        //   }
+        // });
+        // console.log(adjFilledSeats);
+        if ( adjFilledSeats === 0 && seat === 'L' ) {
+          seatPlan[i][j] = '#';
+        } else if ( adjFilledSeats >= 5 && seat === '#' ) {
+          seatPlan[i][j] = 'L';
+        } else {
+          // seatPlan[i][j] = 'X';
+        }
+      }
+    });
+  });
+  // console.log('hmm');
+  return seatPlan;
+}
+
+// console.log( seatFillDeux( seatLayoutArray ) );
+
+function layoutIteratorDeux( layout ) {
+  let layoutNew = seatFillDeux(layout);
+  if ( JSON.stringify(layout) !== JSON.stringify(layoutNew) ) {
+    layoutIteratorDeux(layoutNew);
+  } else {
+    let people = peopleCount(layoutNew);
+    console.log(people);
+    // return people;
+  }
+}
+// layoutIteratorDeux(seatLayoutArray);
+let layout1 = seatFillDeux(seatLayoutArray);
+console.log(layout1);
+
+let layout2 = seatFillDeux(layout1);
+console.log(layout2);
+
+let layout3 = seatFillDeux(layout2);
+console.log(layout3);
+
+let layout4 = seatFillDeux(layout3);
+console.log(layout4);
