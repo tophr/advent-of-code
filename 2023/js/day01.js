@@ -10,11 +10,7 @@ xtwone3four
 4nineeightseven2
 zoneight234
 7pqrstsixteen`;
-const calibrationX = `2911threeninesdvxvheightwobm
-3three16xsxhpnqmzmnine8one
-seven5khtwo891hlb
-sixthreeqpzjpn195
-zoneight234`;
+
 const calibration = `2911threeninesdvxvheightwobm
 3three16xsxhpnqmzmnine8one
 seven5khtwo891hlb
@@ -1016,59 +1012,51 @@ zbjbeightfhbhcfkbhrthqhgsixthree11five
 fbfvqgvqfone5nctdcdpteighttwo
 dhfbhone4fourlgzftg`;
 
-const calibrationVals = calibrationX.split("\n");
-console.log(calibrationVals);
+const calibrationVals = calibration.split("\n");
+// console.log(calibrationVals);
 
 let sum = 0;
-// calibrationVals.forEach((line, i) => {
-//   // find first digit in line
-//   let firstDigit = line.match(/\d/);
-//   //find last digit in line
-//   let lastDigit = line.match(/\d(?=\D*$)/);
-//   // concat first and last digit
-//   let digit = firstDigit + lastDigit;
-//   console.log(digit);
-//   sum += parseInt(digit);
-// });
+calibrationVals.forEach((line, i) => {
+  // find first digit in line
+  let firstDigit = line.match(/\d/);
+  //find last digit in line
+  let lastDigit = line.match(/\d(?=\D*$)/);
+  // concat first and last digit
+  let digit = firstDigit + lastDigit;
+  sum += parseInt(digit);
+});
 
 console.log(sum);
 
 // Part Two 
 let sum2 = 0;
 let numArr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+// Create array from numArr with reversed text 
+let revNumArr = numArr.map((num) => {
+  return num.split("").reverse().join("");
+});
+
 calibrationVals.forEach((line, i) => {
   // build an array of numbers in the line by checking for each number word or a digit including those where the letters in the number word overlap
-  let calArr = line.match(/(?:zero|one|two|three|four|five|six|seven|eight|nine)|\d/g);
-  // let calArr = [];
-  // let regex = /(?=(zero|one|two|three|four|five|six|seven|eight|nine))|\d/g;
+  let firstDigit = line.match(/(?:zero|one|two|three|four|five|six|seven|eight|nine)|\d/);
+  
+  // Reverse line
+  let revLine = line.split("").reverse().join("");
+  let lastDigit = revLine.match(/(?:enin|thgie|neves|xis|evif|ruof|eerht|owt|eno|orez)|\d/);
 
-  // let match;
-  // while ((match = regex.exec(line)) !== null) {
-  //   calArr.push(match[0]);
-  // }
-
-
-  // replacing number words with their digit in calArr
-  console.log({calArr});
-  calArr.forEach((num, i) => {
-    if (numArr.includes(num)) {
-      calArr[i] = numArr.indexOf(num);
-    }
-  });
-
-   // find first digit in line
-   let firstDigit = calArr[0]; //line.match(/\d/);
-
-   //find last digit in line
-   let lastDigit =  calArr[ ( calArr.length - 1 ) ]; //line.match(/\d(?=\D*$)/);
+  // if firstDigit matches a number word from numArr convert it to index
+  if (numArr.includes(firstDigit[0])) {
+    firstDigit = numArr.indexOf(firstDigit[0]);
+  }
+  if (revNumArr.includes(lastDigit[0])) {
+    lastDigit = revNumArr.indexOf(lastDigit[0]);
+  }
 
    // concat first and last digit as strings
   let digit = firstDigit.toString() + lastDigit.toString();
-  console.log(digit);
 
   // add totals
   sum2 += parseInt(digit);
 });
 
-// not 53407
 console.log(sum2);
