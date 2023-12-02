@@ -180,3 +180,16 @@ function findPossibleGames( games, red, green, blue ) {
 }
 
 console.log(findPossibleGames(cubeCounts, 12, 13, 14));
+
+// multiply the values from each game together and add them together
+let powerSum = 0;
+cubeCounts.forEach((game, i) => {
+  let gameCount = 1;
+  for (let color in game) {
+    gameCount *= game[color];
+  }
+  console.log(gameCount);
+  powerSum += gameCount;
+}
+);
+console.log(powerSum);
