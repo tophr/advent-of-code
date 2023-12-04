@@ -162,8 +162,7 @@ const schematic = `
 ...............726.....308.............%........*...../.+........=..../146.................*...................509..........*........593....
 930.........................823..............994.................................100.....857.......................708.220.184..............`;
 
-const schematicArray = schematic.split("\n");
-// console.log(fooArray);
+const schematicArray = schematicEx.split("\n");
 
 let partNumbers = [];
 
@@ -179,7 +178,6 @@ function findAdjSymbols(x, y) {
 }
 
 schematicArray.forEach((line, i) => {
-
   let entries = line.split("");
   let numBuffer = [];
 
@@ -236,7 +234,61 @@ schematicArray.forEach((line, i) => {
   });
 
 });
-console.log(partNumbers);
+// console.log(partNumbers);
+
 // Sum partNumbers array
 const sum = partNumbers.reduce((a, b) => a + b, 0);
 console.log(sum);
+
+// Part 2
+let gearRatios = [];
+
+function adjNum(x, y) {
+  let num = "";
+  let start = (x - 3 > 0) ? x - 3 : 0;
+  let end = (x + 4 < schematicArray[y].length) ? x + 4 : schematicArray[y].length - 1;
+  let row = schematicArray[y].slice(start, end).split("");
+  row.push(".");
+  console.log(row);
+  let numBuffer = [];
+  row.forEach((entry, j) => {
+    if (entry.match(/\d/)) {  
+      numBuffer.push(entry);
+    } else if (numBuffer.length > 0 ) {
+      num = parseInt(numBuffer.join(""));
+      numBuffer = [];
+    }
+  });
+
+  return num;
+};
+
+schematicArray.forEach((line, i) => {
+  let entries = line.split("");
+
+  entries.forEach((entry, j) => {
+    // Check if it's a gear
+    if (entry === "*") {   
+      // Find adjacent numbers 
+      let start = (j - 1 > 0) ? j - 1 : 0;
+      let end = (j + 2 < entries.length) ? j + 2 : entries.length - 1;
+      let ratios = [];
+
+      // Top row
+      if (i > 0) {
+        // search through the row above from start to end index
+        let rowAbove = schematicArray[i - 1].slice(start, end);
+        // console.log(rowAbove);
+        if (rowAbove.match(/\d/)) {
+          // Found a number, let's build it 
+          console.log(adjNum(j, i - 1));
+          ratios.push( adjNum(j, i - 1));
+        }
+      }
+      console.log(ratios);    
+    } 
+  });
+});
+
+const sum2 = gearRatios.reduce((a, b) => a + b, 0);
+// console.log(sum2);
