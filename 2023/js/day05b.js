@@ -34,7 +34,7 @@ humidity-to-location map:
 
 const almanac = ``;
 
-const almanacArray = almanac.split("\n\n");
+const almanacArray = almanacEx.split("\n\n");
 console.log(almanacArray);
 
 let seeds = almanacArray[0].split(": ")[1].split(" ");
@@ -109,18 +109,50 @@ seeds.forEach((seed, i) => {
 });
 console.log(seedRanges);
 
-let seedLocation2 = 99999;
-seedRanges.forEach((range, h) => {
-  // Run processSeed on each range starting from range.start for length of range.end
-  for (let i = range.start; i <= (range.start + range.length - 1); i++) {
-    // console.log(i);
-    let result = processSeed(i);
-    // console.log("y" + seedLocation2 + " " + result);
-    if ( result < seedLocation2 ) {
-      // console.log("xxxx" + result);
-      seedLocation2 = result;
-    }
-  }
+// let seedLocations2 = [];
+// seedRanges.forEach((range, i) => {
+//   // Run processSeed on each range starting from range.start for length of range.end
+//   for (let i = range.start; i <= (range.start + range.length - 1); i++) {
+//     // console.log(i);
+//     seedLocations2.push(processSeed(i));
+//   }
+// });
+// // Find the smallest value in the seedLocations array 
+// console.log(seedLocations2);
+
+// let nonZeroValues = seedLocations2.filter(value => value !== 0);
+// let minNonZeroValue = Math.min(...nonZeroValues);
+// console.log(minNonZeroValue);
+
+// Trying the reverse method
+function processResult(seed) {
+  let seedStart = parseInt(seed);
+  let seedDest = parseInt(seed);
+  let reverseMaps = maps.reverse();
+  reverseMaps.forEach((conversion, i) => {
+    conversion.rules.forEach((range, i) => {
+      let destStart = parseInt(range[0]);
+      let sourceStart = parseInt(range[1]);
+      let rangeLength = parseInt(range[2] - 1);
+      let location = conversion.name.split("-")[2];
+      // Check if seed falls within range
+      if ( seedStart >= sourceStart && seedStart <= sourceStart + rangeLength ) {
+        // Calculate seed location
+        seedDest = destStart + ( seedStart - sourceStart );
+        console.log(`Xseed ${seed} -> ${seedDest} equals ${destStart} plus ${seedStart} minus ${sourceStart}`);
+        console.log(`seed ${seed} -> ${seedStart} is in range ${sourceStart} to ${sourceStart + rangeLength}. ${location}: ${seedDest}`);
+      } else {
+        console.log(`seed ${seed} = ${seedStart} is not in range ${sourceStart} to ${sourceStart + rangeLength}. ${location}:  ${seedDest}`);
+      }
+    });
+    seedStart = seedDest
+ });
+  return seedDest;
+}
+
+let results = [82, 43, 86, 35];
+let inputs = [];
+results.forEach((seed, i) => {  
+  inputs.push(processResult(seed));
 });
-// Find the smallest value in the seedLocations array 
-console.log(seedLocation2);
+console.log(inputs);
