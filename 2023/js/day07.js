@@ -6,20 +6,94 @@ QQQJA 483`;
 
 const hands = ``;
 
-const handsArray = handsEx.split("\n").map(hand => hand.split(" "));
+const handsArray = hands.split("\n").map(hand => hand.split(" "));
 console.log(handsArray);
-const labels = ['A', 'K', 'Q', 'J', 'T', 9, 8, 7, 6, 5, 4, 3, 2].reverse();
+const labels = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'].reverse();
+const types = ["Five of a kind", "Four of a kind", "Full house", "Three of a kind", "Two pair", "One pair", "High card"].reverse();
 let totalWinnings = 0;
-let handsArraySorted = [];
+let handsArrayPresorted = [];
 
 handsArray.forEach((hand, i) => {
   let cards = hand[0].split("");
   let bid = hand[1];
   // Count duplicate cards
   let counts = {};
+  let type = "";
   cards.forEach((x) => { counts[x] = (counts[x] || 0) + 1; });
   console.log(`hand ${i} duplicate count ${JSON.stringify(counts)}`);
-  handsArraySorted.push({ hand: cards, counts: counts, bid: bid });
+  // Find highest count
+  let highestCount = 0;
+  let highestCountCard = "";
+  Object.keys(counts).forEach((key) => {
+    if (counts[key] > highestCount) {
+      highestCount = counts[key];
+      highestCountCard = key;
+    } else if (counts[key] === highestCount) {
+      if (labels.indexOf(key) > labels.indexOf(highestCountCard)) {
+        highestCountCard = key;
+      }
+    }
+  });
+  console.log(`hand ${i} highest count ${highestCount} of ${highestCountCard}`);
+  // Set type 
+  if (highestCount === 5) {
+    type = "Five of a kind";
+  } else if (highestCount === 4) {
+    type = "Four of a kind";
+  } else if (highestCount === 3) {
+    if (Object.keys(counts).length === 2) {
+      type = "Full house";
+    } else {
+      type = "Three of a kind";
+    }
+  } else if (highestCount === 2) {
+    if (Object.keys(counts).length === 3) {
+      type = "Two pair";
+    } else {
+      type = "One pair";
+    }
+  } else {
+    type = "High card";
+  }
+
+  handsArrayPresorted.push({ hand: cards, counts: counts, bid: bid, type: type });
 });
 
+console.log(handsArrayPresorted);
+let handsArraySorted = [];
+// Sort handsArrayPresorted by type and if type is the same, by highest card
+types.forEach((type) => {
+  let handBuffer = [];
+  handsArrayPresorted.forEach((hand) => {
+    if (hand.type === type) {
+      handBuffer.push(hand);
+    }
+  });
+  if (handBuffer.length > 0) {
+    // Sort handBuffer based on value of handBuffer[i].hand, starting with first card but continuing to next card if equal
+    handBuffer.sort((a, b) => {
+      for (let i = 0; i < a.hand.length; i++) {
+        if (labels.indexOf(a.hand[i]) > labels.indexOf(b.hand[i])) {
+          return 1;
+        } else if (labels.indexOf(a.hand[i]) < labels.indexOf(b.hand[i])) {
+          return -1;
+        }
+      }
+      return 0;
+    });
+    console.log({handBuffer});
+    //Add handBuffer to handsArraySorted
+    handBuffer.forEach((hand) => {
+      handsArraySorted.push(hand);
+    });
+  }
+});
 console.log(handsArraySorted);
+
+// Calculate winnings
+handsArraySorted.forEach((hand, i) => {
+  totalWinnings += hand.bid * (i + 1);
+});
+
+console.log(`totalWinnings ${totalWinnings}`);
+// 251479954 too high
