@@ -108,9 +108,9 @@ nodes.forEach((node, i) => {
 console.log(nodeMap);
 
 let allPaths = [];
-for (let i = 0; i < part2StartingNodes.length; i++) {
-  allPaths.push(part2StartingNodes[i]);
-}
+part2StartingNodes.forEach((node, i) => {
+  allPaths.push(node);
+});
 
 function calculatePathToGoal(start, sequence) {
   let sequenceIndex = 0;
