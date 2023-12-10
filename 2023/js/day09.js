@@ -51,7 +51,7 @@ differencePredictions.forEach((differenceMap, i) => {
     } else {
       let lastNumber = difference[difference.length - 1];
       let prevArrayLastNumber = differencePredictions[i][j - 1][difference.length - 1];
-      console.log({ lastNumber, prevArrayLastNumber });
+      // console.log({ lastNumber, prevArrayLastNumber });
 
       let result = parseInt(lastNumber) + parseInt(prevArrayLastNumber);
       differencePredictions[i][j].push(result);
@@ -63,4 +63,31 @@ differencePredictions.forEach((differenceMap, i) => {
 });
 
 console.log({ differencePredictions });
+console.log(sum);
+
+// Part Two 
+sum = 0;
+let differencePredictions2 = JSON.parse(JSON.stringify(differenceMaps));
+differencePredictions2.forEach((differenceMap, i) => {
+  differencePredictions[i] = differenceMap.reverse();
+  differencePredictions[i].push(lines[i]);
+  differencePredictions[i].forEach((difference, j) => {
+    if (j === 0) {
+      differencePredictions2[i][j].unshift(0);
+    } else {
+      let firstNumber = difference[0];
+      let prevArrayFirstNumber = differencePredictions2[i][j - 1][0];
+      // console.log({ firstNumber, prevArrayFirstNumber });
+
+      let result = parseInt(firstNumber) - parseInt(prevArrayFirstNumber);
+      // console.log({ result });
+      differencePredictions2[i][j].unshift(result);
+      if (j === differencePredictions2[i].length - 1) {
+        sum += result;
+      }
+    }
+  });
+});
+
+console.log({ differencePredictions2 });
 console.log(sum);
