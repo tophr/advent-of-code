@@ -104,25 +104,45 @@ seeds.forEach((seed, i) => {
     j++;
   } else {
     // If index is even, create a new object with start in seedRanges array
-    seedRanges[j] = { start: parseInt(seed)};
+    seedRanges[j] = {start: parseInt(seed)};
   }
 });
-seedRanges.forEach((seed, i) => {
-  seedRanges[i].end = parseInt(seed.start) + parseInt(seed.length) - 1;
-});
+// console.log(seedRanges);
 
-console.log(seedRanges);
+// Trying the reverse method
+function processResult(seed) {
+  let seedStart = parseInt(seed);
+  let seedDest = seedStart;
+  for (let i = maps.length - 1; i >= 0; i--) {
+    let conversion = maps[i];
+    conversion.rules.forEach((range, i) => {
+      let destStart = parseInt(range[1]);
+      let sourceStart = parseInt(range[0]);
+      let rangeLength = parseInt(range[2] - 1);
+      let location = conversion.name.split("-")[2];
+      // Check if seed falls within range
+      if ( seedStart >= sourceStart && seedStart <= sourceStart + rangeLength ) {
+        // Calculate seed location
+        seedDest = destStart + ( seedStart - sourceStart );
+      } 
+    });
+    seedStart = seedDest
+  };
+  return seedDest;
+}
 
-let seedLocation2 = 201731623;
-seedRanges.forEach((range, h) => {
-  // Run processSeed on each range starting for range.start for length of range.end
-  
-  let resultStart = processSeed(range.start);
-  let resultEnd = processSeed(range.end);
-  console.log(`range ${range.start} to ${range.end} results in ${resultStart} to ${resultEnd}`);
-  seedLocation2 = Math.min(seedLocation2, resultStart, resultEnd);
-
-});
-// Find the smallest value in the seedLocations array 
-console.log(seedLocation2);
-// ideas to try https://www.reddit.com/r/adventofcode/comments/18buwiz/2023_day_5_part_2_can_someone_explain_a_more/ 
+let seedLocation2 = 0;
+// Starting from running processResult on seedLocation2 = 0, iterate up until you find a value contained within seedRanges
+for (let i = 0; i < 201731623; i++) {
+  seedLocation2 = processResult(i);
+  let found = false;
+  seedRanges.forEach((range, i) => {
+    if ( seedLocation2 >= range.start && seedLocation2 <= (range.start + range.length - 1) ) {
+      found = true;
+    }
+  });
+  if (found) {
+    console.log(`Solution for part two is ${i}`);
+    break;
+  }
+}
