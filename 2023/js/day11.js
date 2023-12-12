@@ -75,3 +75,23 @@ lines.forEach((line, i) => {
   });
 });
 console.log(galaxyMap);
+
+function computeDistance(galaxy1, galaxy2) {
+  return Math.abs(galaxy1.x - galaxy2.x) + Math.abs(galaxy1.y - galaxy2.y);
+}
+
+// Compute distance between each galaxy
+let galaxyDistances = [];
+for (let i = 0; i < galaxyMap.length; i++) {
+  for (let j = i + 1; j < galaxyMap.length; j++) {
+    galaxyDistances.push({galaxy1: galaxyMap[i].galaxy, galaxy2: galaxyMap[j].galaxy, distance: computeDistance(galaxyMap[i], galaxyMap[j])});
+  }
+}
+console.log(galaxyDistances);
+
+// Sum distances for each galaxy
+let galaxyDistancesSum = 0;
+galaxyDistances.forEach((distance) => {
+  galaxyDistancesSum += parseInt(distance.distance);
+});
+console.log(galaxyDistancesSum);
