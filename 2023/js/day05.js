@@ -125,3 +125,4 @@ seedRanges.forEach((range, h) => {
 });
 // Find the smallest value in the seedLocations array 
 console.log(seedLocation2);
+// ideas to try https://www.reddit.com/r/adventofcode/comments/18buwiz/2023_day_5_part_2_can_someone_explain_a_more/ 
