@@ -26,7 +26,7 @@ const patternTest = `...#..##.########
 
 const patterns = ``;
 
-const lines = patterns.split("\n\n").map(line => line.split("\n"));
+const lines = patternsEx.split("\n\n").map(line => line.split("\n"));
 console.log(lines);
 
 function findColReflection(row) {
@@ -92,26 +92,62 @@ function findReflections(pattern, index) {
   return summary;
 }
 
-let reflectionSummaries = [];
+let reflectionSummaries1 = [];
 lines.forEach((pattern, i) => {
-  reflectionSummaries.push( findReflections(pattern, i) );
+  reflectionSummaries1.push( findReflections(pattern, i) );
 });
 
-console.log(reflectionSummaries);
+console.log(reflectionSummaries1);
 
 // Calculate totals 
-let summaryTotal = 0;
-reflectionSummaries.forEach(summary => {
-  if (summary.colIndex.length > 0) {
-    for (let i = 0; i < summary.colIndex.length; i++) {
-      summaryTotal += parseInt(summary.colIndex[i]);
+function calculateTotal(reflectionSummaries) {
+  let summaryTotal = 0;
+  reflectionSummaries.forEach(summary => {
+    if (summary.colIndex.length > 0) {
+      for (let i = 0; i < summary.colIndex.length; i++) {
+        summaryTotal += parseInt(summary.colIndex[i]);
+      }
     }
-  }
-  if (summary.rowIndex.length > 0) {
-    for (let i = 0; i < summary.rowIndex.length; i++) {
-      summaryTotal += parseInt(summary.rowIndex[i]) * 100;
+    if (summary.rowIndex.length > 0) {
+      for (let i = 0; i < summary.rowIndex.length; i++) {
+        summaryTotal += parseInt(summary.rowIndex[i]) * 100;
+      }
     }
-  }
+  });
+  return summaryTotal;
+}
+
+console.log("Solution for part 1 is " + calculateTotal(reflectionSummaries1));
+
+// Part 2
+// Find the smudge by finding which single character can flip to change the reflections
+function findSmudge(pattern, g) {
+  let patternBuffer = []; // I think I need to make a deep copy here instead since I'm running the check on partial patterns 
+  let reflectionSummaries = [];
+  pattern.forEach((row, h) => {
+    patternBuffer[h] = row.split("");
+    console.log(patternBuffer);
+    for (let i = 0; i < row.length;) {
+      if ( patternBuffer[h][i] === "." ) {
+        patternBuffer[h][i] = "#";
+      } else {
+        patternBuffer[h][i] = ".";
+      }
+      patternBuffer[h] = patternBuffer[h].join("");
+      console.log(patternBuffer);
+      let tempSummary = findReflections(patternBuffer, g);
+      patternBuffer[h] = patternBuffer[h].split("");
+      console.log(patternBuffer);
+      reflectionSummaries.push(tempSummary);
+      i++
+    }
+  });
+  return reflectionSummaries;
+}
+
+let reflectionSummaries2 = [];
+lines.forEach((pattern, i) => {
+  reflectionSummaries2.push( findSmudge(pattern, i) );
 });
-console.log("Solution for part 1 is " + summaryTotal);
-// 43053 is too high 
+
+console.log(reflectionSummaries2);
