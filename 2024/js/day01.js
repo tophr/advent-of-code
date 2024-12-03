@@ -7,7 +7,7 @@ const locationsEx = `3   4
 
 const locations = ``;
 
-const locationsArray = locationsEx.split("\n");
+const locationsArray = locations.split("\n");
 console.log(locationsArray);
 
 const leftList = locationsArray.map((location, i) => {
@@ -42,4 +42,15 @@ console.log(distances);
 
 // Sum the distances
 const sum = distances.reduce((acc, curr) => acc + curr, 0);
-console.log(sum);
+console.log('The solution to part one is ' + sum);
+
+// Part 2
+let similarityScore = 0;
+leftList.forEach((left, i) => {
+  // Count how many times the left value appears in the right list
+  const count = rightList.filter((right) => right === left).length;
+  const score = left * count;
+  similarityScore += score;
+});
+
+console.log('The solution to part two is ' + similarityScore);
