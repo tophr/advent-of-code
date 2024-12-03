@@ -7,13 +7,10 @@ const reportsEx = `7 6 4 2 1
 
 const reports = ``;
 
-const reportsArray = reports.split("\n");
+const reportsArray = reportsEx.split("\n");
 
-let safetyCount = 0;
-
-reportsArray.forEach((report, i) => {
-  const levels = report.split(" ");
-  console.log(levels);
+function safetyCheck(levels, i) {
+  let safetyCount = 0;
   // Sort the levels from smallest to largest
   const levelsSorted = levels.slice().sort((a, b) => a - b);
   // Checks if the array changes after sorting
@@ -44,6 +41,34 @@ reportsArray.forEach((report, i) => {
       console.log("Safe " + i);
     }
   }
+  return safetyCount;
+}
+
+let safetyCount = 0;
+reportsArray.forEach((report, i) => {
+  const levels = report.split(" ");
+  console.log(levels);
+  safetyCount += safetyCheck(levels, i);
 });
 
 console.log("The solution to part one is " + safetyCount);
+
+// Part 2
+let dampenedSafetyCount = 0;
+
+reportsArray.forEach((report, i) => {
+  const levels = report.split(" ");
+  let safetyCount = 0;
+  // Iterate through levels dropping one level at a time
+  levels.forEach((level, i) => {
+    const levelsCopy = levels.slice();
+    levelsCopy.splice(i, 1);
+    safetyCount += safetyCheck(levelsCopy, i);
+  });
+  if ( safetyCount > 0) {
+    dampenedSafetyCount ++;
+  }
+  console.log(dampenedSafetyCount + " " + i);
+});
+
+console.log("The solution to part two is " + dampenedSafetyCount);
