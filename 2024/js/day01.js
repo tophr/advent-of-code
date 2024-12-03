@@ -39,3 +39,7 @@ for (let i = 0; i < leftListSorted.length; i++) {
 }
 
 console.log(distances);
+
+// Sum the distances
+const sum = distances.reduce((acc, curr) => acc + curr, 0);
+console.log(sum);
